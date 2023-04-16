@@ -157,9 +157,9 @@ CREATE TABLE operators
 
 CREATE TABLE reports
 (
-	id         	INT PRIMARY KEY,
+	id         	INT PRIMARY KEY AUTO_INCREMENT,
 	message    	VARCHAR(200) NOT NULL,
-	timestamp  	DATETIME,
+	timestamp  	DATETIME   	NOT NULL default CURRENT_TIMESTAMP,
 	commuter_email VARCHAR(50),
 	operator_id	INT,
 	CONSTRAINT
