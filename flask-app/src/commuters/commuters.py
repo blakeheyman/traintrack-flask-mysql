@@ -5,6 +5,24 @@ from src import db
 
 commuters = Blueprint('commuters', __name__)
 
+# Get all of a user's favorites
+@commuters.route('/commuters/<email>/favorites')
+def get_favorites(email):
+    cursor = db.get_db().cursor()
+    query = '''SELECT favorites.nickname, stops.id, stops.location_name, routes.name 
+        FROM favorites JOIN commuters ON favorites.com_email = commuters.email 
+        JOIN stops ON favorites.stop_id = stops.id 
+        JOIN routes ON stops.route_id = routes.id 
+        WHERE STRCMP(commuters.email, \'{0}\') = 0
+    '''.format(email)
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    return jsonify(json_data)
+
 # # Get all the commuters from the database
 # @products.route('/products', methods=['GET'])
 # def get_products():
