@@ -104,11 +104,22 @@ def submit_report():
 @commuters.route('/stops/<stop_id>/times', methods=['GET'])
 def get_times(stop_id):
     cursor = db.get_db().cursor()
-
+    # determine if stop exists
+    query = '''SELECT COUNT(*) FROM stops WHERE id = {0}'''.format(stop_id)
+    cursor.execute(query)
+    if cursor.fetchone()[0] == 0:
+        return jsonify({'message': 'Stop does not exist.'}), 404
+    
+    # determine if stop is open
+    query = '''SELECT COUNT(*) FROM stops WHERE id = {0} AND open = 1'''.format(stop_id)
+    cursor.execute(query)
+    if cursor.fetchone()[0] == 0:
+        return jsonify({'message': 'Stop is not open.'}), 422
+    
     query = '''
-    SELECT name, type, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
+    SELECT name AS route_name, type AS vehicle_type, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
     FROM 
-        (SELECT stops.route_id AS route_id, SUM(time_to_next) AS time_offset
+        (SELECT stops.route_id AS route_id, SUM(time_to_here) AS time_offset
         FROM stops 
         JOIN
             (SELECT route_id, sequence_num AS last_seq
@@ -120,7 +131,7 @@ def get_times(stop_id):
             AS routes_with_seq_num
         USING (route_id)
         WHERE sequence_num < last_seq
-        GROUP BY last_seq) 
+        GROUP BY stops.route_id) 
         AS Offsets
     JOIN
         (Select DISTINCT type, vehicles.id, daily_start_time, route_id, name
@@ -146,47 +157,7 @@ def get_times(stop_id):
     for row in json_data:
         row['trainTime'] = str(row['trainTime'])
     current_app.logger.info(json_data)
-    if(json_data == []):
-        return jsonify({'message': 'stop not found'}), 404
     return jsonify(json_data), 200
-
-# Create a new stop
-@commuters.route('/stops', methods=['POST'])
-def create_stop():
-    data = request.json
-    cursor = db.get_db().cursor()
-
-
-
-# check if place-after-stop-id is null
-    sequence_num = 0
-    try:
-        if data['place_after_stop_id'] is None:
-            
-        # Get first sequence number in this stop's route
-            query = '''SELECT MIN(sequence_num) FROM stops WHERE route_id = {0}'''.format(data['route_id'])
-            cursor.execute(query)
-            sequence_num = cursor.fetchone()[0] - 10
-        else:
-            query = '''SELECT sequence_num FROM stops WHERE stop_id = {0}'''.format(data['place_after_stop_id'])
-            cursor.execute(query)
-            sequence_num = cursor.fetchone()[0] + 1
-    except:
-        return jsonify({'message': 'Invalid provided stop_id'}), 422
-    
-    # Create the stop
-    try:
-        query = '''INSERT INTO stops (sequence_num, time_to_here, location_name, route_id, open) VALUES ({0}, {1}, \'{2}\', {3}, {4})'''.format(sequence_num, data['time_to_here'], data['location_name'], data['route_id'], data['open'])
-        cursor.execute(query)
-        db.get_db().commit()
-    except:
-        return jsonify({'message': 'Invalid route_id'}), 422
-    
-    if cursor.rowcount > 0:
-        return jsonify({'message': 'Stop created successfully.'}), 201
-    else:
-        return jsonify({'message': 'Stop was not created.'}), 400
-
 
 # Update stop information
 @commuters.route('/stops/<stop_id>', methods=['PUT'])
@@ -273,10 +244,10 @@ def get_route(route_id):
 @commuters.route('/routes/<route_id>/stops', methods=['GET'])
 def get_route_stops(route_id):
     cursor = db.get_db().cursor()
-    query = '''SELECT id, time_to_next, location_name, open 
-         FROM stops WHERE route_id = {0}
-         ORDER BY sequence_num ASC
-         '''.format(route_id)
+    query = '''SELECT id, time_to_here, location_name, open 
+        FROM stops WHERE route_id = {0}
+        ORDER BY sequence_num ASC
+        '''.format(route_id)
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
     json_data = []

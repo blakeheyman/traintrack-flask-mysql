@@ -5,6 +5,38 @@ from src import db
 
 admins = Blueprint('admins', __name__)
 
+# Create a new stop
+@admins.route('/stops', methods=['POST'])
+def create_stop():
+    data = request.json
+    cursor = db.get_db().cursor()
+    # Get the sequence number of the stop to be created
+    sequence_num = 0
+    try:
+        if hasattr(data, 'place_after_stop_id'):
+            query = '''SELECT sequence_num FROM stops WHERE id = {0}'''.format(data['place_after_stop_id'])
+            cursor.execute(query)
+            sequence_num = cursor.fetchone()[0] + 1
+        else:
+            query = '''SELECT MIN(sequence_num) FROM stops WHERE route_id = {0}'''.format(data['route_id'])
+            cursor.execute(query)
+            sequence_num = cursor.fetchone()[0] - 10
+    except:
+        return jsonify({'message': 'Invalid provided route_id'}), 422
+    
+    # Create the stop
+    try:
+        query = '''INSERT INTO stops (sequence_num, time_to_here, location_name, route_id, open) VALUES ({0}, {1}, \'{2}\', {3}, {4})'''.format(sequence_num, data['time_to_here'], data['location_name'], data['route_id'], data['open'])
+        cursor.execute(query)
+        db.get_db().commit()
+    except:
+        return jsonify({'message': 'Invalid route_id'}), 422
+    
+    if cursor.rowcount > 0:
+        return jsonify({'message': 'Stop created successfully.'}), 201
+    else:
+        return jsonify({'message': 'Stop was not created.'}), 400
+
 # Delete a stop as an admin
 @admins.route('/stops/<stop_id>', methods=['DELETE'])
 def delete_stop(stop_id):
@@ -48,37 +80,6 @@ def add_location():
         return jsonify({'message': 'Location added successfully.'}), 201
     except:
         return jsonify({'message': 'Location already exists.'}), 409
-
-# # Get all admins from the DB
-# @customers.route('/customers', methods=['GET'])
-# def get_customers():
-#     cursor = db.get_db().cursor()
-#     cursor.execute('select company, last_name,\
-#         first_name, job_title, business_phone from customers')
-#     row_headers = [x[0] for x in cursor.description]
-#     json_data = []
-#     theData = cursor.fetchall()
-#     for row in theData:
-#         json_data.append(dict(zip(row_headers, row)))
-#     the_response = make_response(jsonify(json_data))
-#     the_response.status_code = 200
-#     the_response.mimetype = 'application/json'
-#     return the_response
-
-# # Get customer detail for customer with particular userID
-# @customers.route('/customers/<userID>', methods=['GET'])
-# def get_customer(userID):
-#     cursor = db.get_db().cursor()
-#     cursor.execute('select * from customers where id = {0}'.format(userID))
-#     row_headers = [x[0] for x in cursor.description]
-#     json_data = []
-#     theData = cursor.fetchall()
-#     for row in theData:
-#         json_data.append(dict(zip(row_headers, row)))
-#     the_response = make_response(jsonify(json_data))
-#     the_response.status_code = 200
-#     the_response.mimetype = 'application/json'
-#     return the_response
 
 # Update route information
 @admins.route('/routes/<route_id>', methods=['PUT'])
