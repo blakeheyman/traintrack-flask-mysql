@@ -19,5 +19,26 @@
     "created": "2023-04-17T02:43:30.440Z",
     "sortNum": 40000,
     "folders": []
+  },
+  {
+    "_id": "569d3c3d-68cb-4711-ad77-ab4d629d512f",
+    "colName": "Locations",
+    "created": "2023-04-17T15:30:50.917Z",
+    "sortNum": 50000,
+    "folders": []
+  },
+  {
+    "_id": "8fe08d58-282f-487f-87e4-6e8a0759f710",
+    "colName": "Transit Cards",
+    "created": "2023-04-17T15:41:51.918Z",
+    "sortNum": 60000,
+    "folders": []
+  },
+  {
+    "_id": "1c8a5af1-e4bd-4362-bb00-26c815193516",
+    "colName": "Commuters",
+    "created": "2023-04-17T15:42:28.846Z",
+    "sortNum": 50000,
+    "folders": []
   }
 ]

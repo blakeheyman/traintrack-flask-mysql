@@ -27,10 +27,10 @@ CREATE TABLE commuters
 
 CREATE TABLE transit_cards
 (
-	id        	INT PRIMARY KEY,
+	id        	INT PRIMARY KEY AUTO_INCREMENT,
 	balance   	DECIMAL 	NOT NULL,
 	email     	VARCHAR(50) NOT NULL,
-	purchase_date DATE,
+	purchase_date DATETIME NOT NULL default CURRENT_TIMESTAMP,
 	CONSTRAINT
     	transit_cards_fk1 FOREIGN KEY (email)
     	REFERENCES commuters (email)
