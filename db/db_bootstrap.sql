@@ -58,12 +58,12 @@ CREATE TABLE locations
 
 CREATE TABLE stops
 (
-	id        	INT PRIMARY KEY,
+	id        	INT PRIMARY KEY AUTO_INCREMENT,
 	sequence_num  INT UNIQUE,
 	time_to_next  INT,
 	location_name VARCHAR(50) NOT NULL,
 	route_id  	INT     	NOT NULL,
-	open      	BOOL,
+	open      	BOOL default 0 NOT NULL,
 	CONSTRAINT
     	stops_fk1 FOREIGN KEY (location_name)
     	REFERENCES locations (name)
