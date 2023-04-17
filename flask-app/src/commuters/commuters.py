@@ -181,3 +181,51 @@ def purchase_transitcard():
         return jsonify({'message': 'Transit card purchased successfully.'}), 201
     except:
         return jsonify({'message': 'Invalid email.'}), 400
+
+# Return all routes
+@commuters.route('/routes', methods=['GET'])
+def get_routes():
+    cursor = db.get_db().cursor()
+    query = 'SELECT * from routes'
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    if len(json_data) == 0:
+        return jsonify({'message': 'No routes found.'}), 404    
+    return jsonify(json_data), 200
+
+# Return info for a given route
+@commuters.route('/routes/<route_id>', methods=['GET'])
+def get_route(route_id):
+    cursor = db.get_db().cursor()
+    query = 'SELECT * FROM routes WHERE routes.id = {0}'.format(route_id)
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    if len(json_data) == 0:
+        return jsonify({'message': 'Route does not exist.'}), 404
+    return jsonify(json_data), 200
+
+# Return stops for a given route
+@commuters.route('/routes/<route_id>/stops', methods=['GET'])
+def get_route_stops(route_id):
+    cursor = db.get_db().cursor()
+    query = '''SELECT id, time_to_next, location_name, open 
+         FROM stops WHERE route_id = {0}
+         ORDER BY sequence_num ASC
+         '''.format(route_id)
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    if len(json_data) == 0:
+        return jsonify({'message': 'Route has no associated stops.'}), 404
+    return jsonify(json_data), 200
