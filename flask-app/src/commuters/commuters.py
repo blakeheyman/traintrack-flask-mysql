@@ -133,3 +133,35 @@ def get_times(stop_id):
     current_app.logger.info(json_data)
     
     return jsonify(json_data), 200
+
+# Return all locations
+@commuters.route('/locations', methods=['GET'])
+def get_locations():
+    cursor = db.get_db().cursor()
+    query = '''SELECT * from locations'''
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    return jsonify(json_data), 200
+
+# "Purchase" a new transit card
+@commuters.route('/transitcards', methods=['POST'])
+def purchase_transitcard():
+    # Make sure the balance is positive
+    if request.json['balance'] <= 0:
+        return jsonify({'message': 'Balance must be positive.'}), 400
+
+    cursor = db.get_db().cursor()
+    query = '''INSERT INTO transit_cards (balance, email) 
+        VALUES ({0}, \'{1}\')
+    '''.format(request.json['balance'], request.json['email'])
+
+    try:
+        cursor.execute(query)
+        db.get_db().commit()
+        return jsonify({'message': 'Transit card purchased successfully.'}), 201
+    except:
+        return jsonify({'message': 'Invalid email.'}), 400
