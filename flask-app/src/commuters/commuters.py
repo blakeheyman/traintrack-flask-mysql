@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from src import db
 
@@ -82,3 +82,54 @@ def submit_report():
         return jsonify({'message': 'Report submitted successfully.'}), 201
     except:
         return jsonify({'message': 'Report was not submitted.'}), 400
+    
+
+# Get the train times at a stop
+@commuters.route('/stops/<stop_id>/times', methods=['GET'])
+def get_times(stop_id):
+    cursor = db.get_db().cursor()
+
+    # Query to all the stops at this stop's location
+    query = '''
+    SELECT name, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
+    FROM 
+        (SELECT stops.route_id AS route_id, SUM(time_to_next) AS time_offset
+        FROM stops 
+        JOIN
+            (SELECT route_id, sequence_num AS last_seq
+            FROM stops 
+            JOIN routes r on stops.route_id = r.id
+            WHERE stops.id IN 
+                (SELECT id FROM stops
+                WHERE location_name = (SELECT location_name FROM stops WHERE id = {0}))) 
+            AS routes_with_seq_num
+        USING (route_id)
+        WHERE sequence_num < last_seq
+        GROUP BY last_seq) 
+        AS Offsets
+    JOIN
+        (Select DISTINCT vehicles.id, daily_start_time, route_id, name
+        FROM vehicles 
+        JOIN
+            (SELECT name, route_id, sequence_num AS last_seq
+            FROM stops 
+            JOIN routes r on stops.route_id = r.id
+            WHERE stops.id IN 
+                (SELECT id FROM stops
+                WHERE location_name = (SELECT location_name FROM stops WHERE id = {0}))) 
+            AS routes_with_seq
+        USING (route_id))
+        AS VehicleStartTimes
+    ORDER BY name, trainTime
+    '''.format(stop_id)
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    for row in json_data:
+        row['trainTime'] = str(row['trainTime'])
+    current_app.logger.info(json_data)
+    
+    return jsonify(json_data), 200

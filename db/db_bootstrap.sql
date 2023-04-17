@@ -116,16 +116,11 @@ CREATE TABLE vehicles
 (
 	id          	INT PRIMARY KEY,
 	type        	VARCHAR(50) NOT NULL,
-	inbound_route   INT,
-	outbound_route  INT,
+	route_id   INT,
 	commission_date DATE,
+  daily_start_time TIME,
 	CONSTRAINT
-    	vehicles_fk1 FOREIGN KEY (inbound_route)
-    	REFERENCES routes (id)
-    	ON UPDATE CASCADE
-    	ON DELETE SET NULL,
-	CONSTRAINT
-    	vehicles_fk2 FOREIGN KEY (outbound_route)
+    	vehicles_fk1 FOREIGN KEY (route_id)
     	REFERENCES routes (id)
     	ON UPDATE CASCADE
     	ON DELETE SET NULL
@@ -158,10 +153,10 @@ CREATE TABLE operators
 CREATE TABLE reports
 (
 	id         	INT PRIMARY KEY AUTO_INCREMENT,
-	message    	VARCHAR(200) NOT NULL,
+	message    	VARCHAR(200) NOT NULL default 'No message',
 	timestamp  	DATETIME   	NOT NULL default CURRENT_TIMESTAMP,
-	commuter_email VARCHAR(50),
-	operator_id	INT,
+	commuter_email VARCHAR(50) default NULL,
+	operator_id	INT default NULL,
 	CONSTRAINT
     	reports_fk1 FOREIGN KEY (commuter_email)
     	REFERENCES commuters (email)
@@ -674,28 +669,46 @@ INSERT INTO alerts(id,message,start_date,end_date,severity,stop_id) VALUES (29,'
 INSERT INTO alerts(id,message,start_date,end_date,severity,stop_id) VALUES (30,'Team-oriented intangible framework','2022-09-21','2022-09-21',5,64);
 
 
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (1,'train',1,6,'2022-06-22');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (2,'train',4,6,'2022-05-21');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (3,'train',6,5,'2022-05-12');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (4,'train',5,1,'2022-12-22');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (5,'bus',5,1,'2022-11-24');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (6,'bus',8,3,'2022-04-21');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (7,'bus',4,8,'2022-09-08');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (8,'train',3,2,'2022-06-09');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (9,'train',2,7,'2022-10-24');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (10,'ferry',4,6,'2022-10-17');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (11,'bus',2,4,'2022-06-10');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (12,'train',1,4,'2023-01-13');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (13,'ferry',2,2,'2022-09-08');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (14,'bus',1,7,'2022-06-16');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (15,'train',7,7,'2023-03-09');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (16,'train',8,1,'2022-09-18');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (17,'bus',4,5,'2022-08-24');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (18,'ferry',8,3,'2022-07-14');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (19,'bus',7,3,'2022-04-13');
-INSERT INTO vehicles(id,type,inbound_route,outbound_route,commission_date) VALUES (20,'bus',8,4,'2023-03-16');
-
-
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (1,'train',5,'2022-07-31','16:02');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (2,'bus',8,'2023-03-10','17:50');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (3,'ferry',2,'2022-06-01','7:58');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (4,'train',1,'2023-03-02','15:50');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (5,'ferry',3,'2022-09-09','14:59');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (6,'bus',7,'2022-05-12','7:45');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (7,'ferry',6,'2022-11-30','14:24');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (8,'bus',4,'2022-04-28','13:14');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (9,'train',7,'2022-10-09','10:04');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (10,'ferry',4,'2022-07-24','9:17');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (11,'ferry',2,'2023-03-29','13:52');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (12,'ferry',1,'2022-11-03','16:32');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (13,'bus',8,'2023-02-27','10:52');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (14,'bus',5,'2023-01-18','17:50');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (15,'ferry',6,'2022-07-26','7:36');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (16,'ferry',3,'2023-01-01','17:47');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (17,'train',1,'2022-04-27','6:02');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (18,'bus',2,'2022-12-17','14:47');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (19,'train',7,'2022-06-19','12:39');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (20,'bus',4,'2022-05-06','14:19');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (21,'ferry',5,'2022-06-27','13:12');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (22,'bus',8,'2023-01-05','12:12');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (23,'train',6,'2022-04-14','12:37');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (24,'bus',3,'2023-01-06','14:43');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (25,'ferry',4,'2022-11-17','18:00');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (26,'train',2,'2022-10-14','6:22');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (27,'ferry',5,'2022-04-16','12:32');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (28,'bus',6,'2023-02-19','9:52');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (29,'bus',8,'2022-12-28','15:40');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (30,'ferry',7,'2023-02-02','6:39');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (31,'ferry',3,'2022-11-15','16:58');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (32,'ferry',1,'2022-05-08','11:44');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (33,'ferry',2,'2022-08-15','15:53');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (34,'train',4,'2022-08-27','12:29');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (35,'bus',7,'2023-02-09','16:04');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (36,'ferry',8,'2022-11-08','8:13');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (37,'bus',5,'2023-01-11','15:56');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (38,'ferry',1,'2023-02-24','6:11');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (39,'train',6,'2022-10-27','15:04');
+INSERT INTO vehicles(id,type,route_id,commission_date,daily_start_time) VALUES (40,'ferry',3,'2022-10-19','15:14');
 
 INSERT INTO operators(id,vehicle_id,phone_num,email,address_line_1,address_line_2,city,state,zip_code,ssn,birth_date,shift_start,shift_end) VALUES (1,1,'812-320-2833','gantham0@mit.edu','1927 Service Street','Room 1813','Evansville','Indiana',66302,'559-62-0316','2023-04-09','23:56','14:39');
 INSERT INTO operators(id,vehicle_id,phone_num,email,address_line_1,address_line_2,city,state,zip_code,ssn,birth_date,shift_start,shift_end) VALUES (2,2,'703-524-4199','jchace1@privacy.gov.au','8028 Service Trail','Apt 358','Reston','Virginia',87569,'292-72-0214','2022-07-16','22:35','13:52');

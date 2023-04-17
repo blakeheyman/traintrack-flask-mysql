@@ -116,5 +116,19 @@
       "form": []
     },
     "tests": []
+  },
+  {
+    "_id": "3a55cbd4-ba60-4008-9ea7-e41d72d29ad3",
+    "colId": "7e7852eb-d44f-48d0-92c5-433540ca5962",
+    "containerId": "",
+    "name": "GET Train Times",
+    "url": "http://localhost:8001/c/stops/78/times",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-04-17T02:43:49.880Z",
+    "modified": "2023-04-17T07:14:22.160Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]

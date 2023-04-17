@@ -5,6 +5,19 @@ from src import db
 
 admins = Blueprint('admins', __name__)
 
+# Delete a stop as an admin
+@admins.route('/stops/<stop_id>', methods=['DELETE'])
+def delete_stop(stop_id):
+    cursor = db.get_db().cursor()
+    query = '''DELETE FROM stops WHERE id = {0}
+    '''.format(stop_id)
+    cursor.execute(query)
+    db.get_db().commit()
+    if cursor.rowcount == 1:
+        return jsonify({'message': 'Stop deleted successfully.'}), 200
+    else:
+        return jsonify({'message': 'Stop does not exist.'}), 404
+
 # # Get all admins from the DB
 # @customers.route('/customers', methods=['GET'])
 # def get_customers():
