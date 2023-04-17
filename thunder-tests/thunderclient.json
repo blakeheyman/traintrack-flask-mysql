@@ -579,7 +579,7 @@
     "_id": "5936d8a1-209e-4005-9fa4-4ad783605749",
     "colId": "cb219872-3dc1-414b-a85d-f91c13cdbf3b",
     "containerId": "",
-    "name": "Create Vehicle",
+    "name": "Create Vehicle commission_date",
     "url": "localhost:8001/a/vehicle",
     "method": "POST",
     "sortNum": 40000,
@@ -609,6 +609,25 @@
     "body": {
       "type": "json",
       "raw": "{\n  \"type\": \"ferry\",\n  \"daily_start_time\": \"03:00:00\",\n  \"route_id\": 20,\n  \"commission_date\": \"2023-03-16\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "1a7fd67d-0eb6-4ca6-96b5-064ccb5fa733",
+    "colId": "cb219872-3dc1-414b-a85d-f91c13cdbf3b",
+    "containerId": "",
+    "name": "Create Vehicle",
+    "url": "localhost:8001/a/vehicle",
+    "method": "POST",
+    "sortNum": 45000,
+    "created": "2023-04-17T22:25:13.571Z",
+    "modified": "2023-04-17T22:32:48.275Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"type\": \"bus\",\n  \"daily_start_time\": \"03:00:00\",\n  \"route_id\": 5\n}",
       "form": []
     },
     "tests": []

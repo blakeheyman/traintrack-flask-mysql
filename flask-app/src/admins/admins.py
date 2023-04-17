@@ -86,8 +86,11 @@ def create_vehicle():
     data = request.json
     current_app.logger.info(data)
 
-    qry = f'''INSERT INTO vehicles (type, route_id, commission_date, daily_start_time) VALUES
-    ('{data['type']}', {data['route_id']}, '{data['commission_date']}', '{data['daily_start_time']}')'''
+    qry = f'''INSERT INTO vehicles (type, route_id, daily_start_time) VALUES
+    ('{data['type']}', {data['route_id']}, '{data['daily_start_time']}')'''
+    if 'commission_date' in data:
+        qry = f'''INSERT INTO vehicles (type, route_id, commission_date, daily_start_time) VALUES
+        ('{data['type']}', {data['route_id']}, '{data['commission_date']}', '{data['daily_start_time']}')'''
 
     cursor = db.get_db().cursor()
     try:

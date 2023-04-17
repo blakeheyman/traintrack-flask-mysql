@@ -117,7 +117,7 @@ CREATE TABLE vehicles
 	id          	INT PRIMARY KEY AUTO_INCREMENT,
 	type        	VARCHAR(50) NOT NULL,
 	route_id   INT,
-	commission_date DATE,
+	commission_date DATE DEFAULT (CURRENT_DATE),
   daily_start_time TIME,
 	CONSTRAINT
     	vehicles_fk1 FOREIGN KEY (route_id)
