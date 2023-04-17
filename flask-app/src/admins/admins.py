@@ -79,3 +79,18 @@ def add_location():
 #     the_response.status_code = 200
 #     the_response.mimetype = 'application/json'
 #     return the_response
+
+# Update route information
+@admins.route('/routes/<route_id>', methods=['PUT'])
+def update_route(route_id):
+    cursor = db.get_db().cursor()
+    query = '''UPDATE routes 
+        SET name = \'{1}\', time_period = \'{2}\'
+        WHERE id = \'{0}\'
+    '''.format(route_id, request.json['name'], request.json['time_period'])
+    cursor.execute(query)
+    db.get_db().commit()
+    if cursor.rowcount == 1:
+        return jsonify({'message': 'Route updated successfully.'}), 200
+    else:
+        return jsonify({'message': 'Route was not updated.'}), 400
