@@ -98,11 +98,11 @@ CREATE TABLE favorites
 
 CREATE TABLE alerts
 (
-	id     	INT PRIMARY KEY,
+	id     	INT PRIMARY KEY AUTO_INCREMENT,
 	message	VARCHAR(50) NOT NULL,
 	start_date DATE,
 	end_date   DATE,
-	severity   VARCHAR(50),
+	severity   INT,
 	stop_id	INT     	NOT NULL,
 	CONSTRAINT
     	alerts_fk1 FOREIGN KEY (stop_id)
@@ -114,7 +114,7 @@ CREATE TABLE alerts
 
 CREATE TABLE vehicles
 (
-	id          	INT PRIMARY KEY,
+	id          	INT PRIMARY KEY AUTO_INCREMENT,
 	type        	VARCHAR(50) NOT NULL,
 	route_id   INT,
 	commission_date DATE,
