@@ -47,5 +47,19 @@
     "created": "2023-04-17T18:11:08.915Z",
     "sortNum": 70000,
     "folders": []
+  },
+  {
+    "_id": "2d2485f1-840c-4692-9acd-04cc9cece6e6",
+    "colName": "Alerts",
+    "created": "2023-04-17T20:58:35.448Z",
+    "sortNum": 80000,
+    "folders": []
+  },
+  {
+    "_id": "cb219872-3dc1-414b-a85d-f91c13cdbf3b",
+    "colName": "Vehicles",
+    "created": "2023-04-17T20:58:44.329Z",
+    "sortNum": 90000,
+    "folders": []
   }
 ]

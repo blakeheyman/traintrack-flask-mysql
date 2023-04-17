@@ -99,6 +99,30 @@ def submit_report():
     except:
         return jsonify({'message': 'Report was not submitted.'}), 400
     
+# View alerts for a stop
+@commuters.route('/alerts/<stop_id>', methods=['GET'])
+def view_alerts(stop_id):
+    cursor = db.get_db().cursor()
+
+    # Stop progressing if stop doesn't exist
+    qry = f'SELECT * FROM stops WHERE id = {stop_id}'
+    cursor.execute(qry)
+    if cursor.rowcount == 0:
+        return jsonify({'message': 'Stop not found.'}), 404
+
+    # Retrieve any alerts
+    qry = f'''SELECT message, start_date, end_date, severity
+    FROM alerts
+    WHERE stop_id = {stop_id}'''
+    cursor.execute(qry)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data), 200
+
 
 # Get the train times at a stop
 @commuters.route('/stops/<stop_id>/times', methods=['GET'])

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify, make_response, current_app
 import json
 from src import db
 
@@ -80,6 +80,64 @@ def add_location():
         return jsonify({'message': 'Location added successfully.'}), 201
     except:
         return jsonify({'message': 'Location already exists.'}), 409
+
+# Create a new vehicle
+@admins.route('/vehicle', methods=['POST'])
+def create_vehicle():
+    data = request.json
+    current_app.logger.info(data)
+
+    qry = f'''INSERT INTO vehicles (type, route_id, daily_start_time) VALUES
+    ('{data['type']}', {data['route_id']}, '{data['daily_start_time']}')'''
+    if 'commission_date' in data:
+        qry = f'''INSERT INTO vehicles (type, route_id, commission_date, daily_start_time) VALUES
+        ('{data['type']}', {data['route_id']}, '{data['commission_date']}', '{data['daily_start_time']}')'''
+
+    cursor = db.get_db().cursor()
+    try:
+        cursor.execute(qry)
+        db.get_db().commit()
+        return jsonify({'message': 'Vehicle created.'}), 201
+    except:
+        return jsonify({'message': 'Failed to create vehicle.'}), 400
+
+# Change a vehicle's schedule
+@admins.route('/vehicle/<id>', methods=['PUT'])
+def update_vehicle_schedule(id):
+    data = request.json
+    current_app.logger.info(data)
+
+    qry = f'''UPDATE vehicles
+    SET daily_start_time = '{data["daily_start_time"]}', route_id = {data["route_id"]}
+    WHERE id = {id}'''
+
+    cursor = db.get_db().cursor()
+    try:
+        cursor.execute(qry)
+        db.get_db().commit()
+        if cursor.rowcount == 0:
+            return jsonify({'message': 'Vehicle ID not found.'}), 404
+
+        return jsonify({'message': 'Vehicle schedule updated.'}), 200
+    except:
+        return jsonify({'message': 'Unable to update vehicle schedule.'}), 400
+
+# Add an alert to a stop
+@admins.route('/alerts/<stop_id>', methods=['POST'])
+def add_alert(stop_id):
+    data = request.json
+    current_app.logger.info(data)
+
+    qry = f'''INSERT INTO alerts (message, start_date, end_date, severity, stop_id) VALUES
+    ('{data['message']}', '{data['start_date']}', '{data['end_date']}', {data['severity']}, {stop_id})'''
+
+    cursor = db.get_db().cursor()
+    try:
+        cursor.execute(qry)
+        db.get_db().commit()
+        return jsonify({'message': 'Alert created.'}), 201
+    except:
+        return jsonify({'message': 'Failed to create alert.'}), 400
 
 # Update route information
 @admins.route('/routes/<route_id>', methods=['PUT'])
