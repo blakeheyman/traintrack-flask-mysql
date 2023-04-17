@@ -105,7 +105,6 @@ def submit_report():
 def get_times(stop_id):
     cursor = db.get_db().cursor()
 
-    # Query to all the stops at this stop's location
     query = '''
     SELECT name, type, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
     FROM 
@@ -149,6 +148,25 @@ def get_times(stop_id):
     current_app.logger.info(json_data)
     
     return jsonify(json_data), 200
+
+# Update stop information
+@commuters.route('/stops/<stop_id>', methods=['PUT'])
+def update_stop(stop_id):
+    data = request.json
+    cursor = db.get_db().cursor()
+
+    # Update the stop's open attribute
+    if 'open' in data:
+        query = '''UPDATE stops SET open = {0} WHERE id = {1}'''.format(data['open'], stop_id)
+        cursor.execute(query)
+        db.get_db().commit()
+        if cursor.rowcount > 0:
+            return jsonify({'message': 'Stop updated successfully.'}), 200
+        else:
+            return jsonify({'message': 'Stop was not updated.'}), 404
+    else:
+        return jsonify({'message': 'Body must include open'}), 422
+
 
 # Return all locations
 @commuters.route('/locations', methods=['GET'])
