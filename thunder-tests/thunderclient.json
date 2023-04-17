@@ -122,11 +122,11 @@
     "colId": "7e7852eb-d44f-48d0-92c5-433540ca5962",
     "containerId": "",
     "name": "GET Train Times",
-    "url": "http://localhost:8001/c/stops/78/times",
+    "url": "http://localhost:8001/c/stops/25/times",
     "method": "GET",
     "sortNum": 10000,
     "created": "2023-04-17T02:43:49.880Z",
-    "modified": "2023-04-17T07:14:22.160Z",
+    "modified": "2023-04-17T17:07:27.854Z",
     "headers": [],
     "params": [],
     "tests": []

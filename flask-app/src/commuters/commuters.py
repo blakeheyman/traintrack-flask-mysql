@@ -91,7 +91,7 @@ def get_times(stop_id):
 
     # Query to all the stops at this stop's location
     query = '''
-    SELECT name, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
+    SELECT name, type, DATE_ADD(daily_start_time, INTERVAL time_offset MINUTE) AS trainTime
     FROM 
         (SELECT stops.route_id AS route_id, SUM(time_to_next) AS time_offset
         FROM stops 
@@ -108,7 +108,7 @@ def get_times(stop_id):
         GROUP BY last_seq) 
         AS Offsets
     JOIN
-        (Select DISTINCT vehicles.id, daily_start_time, route_id, name
+        (Select DISTINCT type, vehicles.id, daily_start_time, route_id, name
         FROM vehicles 
         JOIN
             (SELECT name, route_id, sequence_num AS last_seq
@@ -120,7 +120,7 @@ def get_times(stop_id):
             AS routes_with_seq
         USING (route_id))
         AS VehicleStartTimes
-    ORDER BY name, trainTime
+    ORDER BY name, type, trainTime
     '''.format(stop_id)
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
