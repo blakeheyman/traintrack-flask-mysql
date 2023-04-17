@@ -5,6 +5,22 @@ from src import db
 
 commuters = Blueprint('commuters', __name__)
 
+# Create a new commuter
+@commuters.route('/commuters', methods=['POST'])
+def add_commuter():
+    data = request.json
+    current_app.logger.info(data)
+
+    qry = f'''INSERT INTO commuters (email, password, first_name, last_name) VALUES
+     ('{data['email']}', '{data['password']}', '{data['first_name']}', '{data['last_name']}')'''
+
+    try:
+        db.get_db().cursor().execute(qry)
+        db.get_db().commit()
+        return jsonify({'message': 'Commuter created.'}), 201
+    except:
+        return jsonify({'message': 'Commuter already exists.'}), 409
+
 # Get all of a user's favorites
 @commuters.route('/<email>/favorites', methods=['GET'])
 def get_favorites(email):

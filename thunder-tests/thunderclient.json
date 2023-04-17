@@ -234,5 +234,43 @@
       "form": []
     },
     "tests": []
+  },
+  {
+    "_id": "8e37ab07-e815-4ff5-aac7-ab0247065b4b",
+    "colId": "1c8a5af1-e4bd-4362-bb00-26c815193516",
+    "containerId": "",
+    "name": "Add New Commuter",
+    "url": "localhost:8001/c/commuters",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2023-04-17T16:10:54.529Z",
+    "modified": "2023-04-17T16:10:54.529Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"pseudonymous@radmail.com\",\n  \"password\": \"securepass\",\n  \"first_name\": \"Sue\",\n  \"last_name\": \"Donnamiss\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "99a3bf1c-af4a-49bf-9da9-c9a11a9aedb0",
+    "colId": "1c8a5af1-e4bd-4362-bb00-26c815193516",
+    "containerId": "",
+    "name": "Add Existing Commuter",
+    "url": "localhost:8001/c/commuters",
+    "method": "POST",
+    "sortNum": 20000,
+    "created": "2023-04-17T16:17:20.165Z",
+    "modified": "2023-04-17T16:17:20.165Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"email\": \"dhickinbottom1@eventbrite.com\",\n  \"password\": \"b5TBgZO8i\",\n  \"first_name\": \"Dewain\",\n  \"last_name\": \"Hickinbottom\"\n}",
+      "form": []
+    },
+    "tests": []
   }
 ]
