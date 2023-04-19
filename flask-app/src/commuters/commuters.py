@@ -238,7 +238,7 @@ def purchase_transitcard():
 @commuters.route('/routes', methods=['GET'])
 def get_routes():
     cursor = db.get_db().cursor()
-    query = 'SELECT * from routes'
+    query = 'SELECT name AS label, id AS value from routes'
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
     json_data = []
@@ -268,7 +268,7 @@ def get_route(route_id):
 @commuters.route('/routes/<route_id>/stops', methods=['GET'])
 def get_route_stops(route_id):
     cursor = db.get_db().cursor()
-    query = '''SELECT id, time_to_here, location_name, open 
+    query = '''SELECT id AS value, location_name AS label
         FROM stops WHERE route_id = {0}
         ORDER BY sequence_num ASC
         '''.format(route_id)
