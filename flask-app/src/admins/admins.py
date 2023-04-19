@@ -5,6 +5,44 @@ from src import db
 
 admins = Blueprint('admins', __name__)
 
+# View all stops
+@admins.route('/stops/', methods=['GET'])
+def view_stops():
+    cursor = db.get_db().cursor()
+    qry = f'''SELECT *
+    FROM stops'''
+    cursor.execute(qry)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data), 200
+
+
+# View stop info
+@admins.route('/stops/<stop_id>', methods=['GET'])
+def view_alerts(stop_id):
+    cursor = db.get_db().cursor()
+
+    # Stop progressing if stop doesn't exist
+    qry = f'SELECT * FROM stops WHERE id = {stop_id}'
+    cursor.execute(qry)
+    if cursor.rowcount == 0:
+        return jsonify({'message': 'Stop not found.'}), 404
+    qry = f'''SELECT *
+    FROM stops
+    WHERE id = {stop_id}'''
+    cursor.execute(qry)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+
+    return jsonify(json_data), 200
+
 # Create a new stop
 @admins.route('/stops', methods=['POST'])
 def create_stop():
@@ -36,6 +74,24 @@ def create_stop():
         return jsonify({'message': 'Stop created successfully.'}), 201
     else:
         return jsonify({'message': 'Stop was not created.'}), 400
+
+# Update stop information
+@admins.route('/stops/<stop_id>', methods=['PUT'])
+def update_stop(stop_id):
+    data = request.json
+    cursor = db.get_db().cursor()
+
+
+    query = '''UPDATE stops 
+        SET open = {0}, sequence_num = {1}, time_to_here = {2}
+        WHERE id = {3}
+        '''.format(data['open'], data['sequence_num'], data['time_to_here'], stop_id)
+    cursor.execute(query)
+    db.get_db().commit()
+    if cursor.rowcount > 0:
+        return jsonify({'message': 'Stop updated successfully.'}), 200
+    else:
+        return jsonify({'message': 'Stop was not updated.'}), 404
 
 # Delete a stop as an admin
 @admins.route('/stops/<stop_id>', methods=['DELETE'])
