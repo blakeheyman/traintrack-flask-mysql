@@ -183,24 +183,6 @@ def get_times(stop_id):
     current_app.logger.info(json_data)
     return jsonify(json_data), 200
 
-# Update stop information
-@commuters.route('/stops/<stop_id>', methods=['PUT'])
-def update_stop(stop_id):
-    data = request.json
-    cursor = db.get_db().cursor()
-
-    # Update the stop's open attribute
-    if 'open' in data:
-        query = '''UPDATE stops SET open = {0} WHERE id = {1}'''.format(data['open'], stop_id)
-        cursor.execute(query)
-        db.get_db().commit()
-        if cursor.rowcount > 0:
-            return jsonify({'message': 'Stop updated successfully.'}), 200
-        else:
-            return jsonify({'message': 'Stop was not updated.'}), 404
-    else:
-        return jsonify({'message': 'Body must include open'}), 422
-
 
 # Return all locations
 @commuters.route('/locations', methods=['GET'])
@@ -238,7 +220,7 @@ def purchase_transitcard():
 @commuters.route('/routes', methods=['GET'])
 def get_routes():
     cursor = db.get_db().cursor()
-    query = 'SELECT name AS label, id AS value from routes'
+    query = 'SELECT * from routes'
     cursor.execute(query)
     column_headers = [x[0] for x in cursor.description]
     json_data = []
@@ -268,7 +250,7 @@ def get_route(route_id):
 @commuters.route('/routes/<route_id>/stops', methods=['GET'])
 def get_route_stops(route_id):
     cursor = db.get_db().cursor()
-    query = '''SELECT id AS value, location_name AS label
+    query = '''SELECT id, time_to_here, location_name, open 
         FROM stops WHERE route_id = {0}
         ORDER BY sequence_num ASC
         '''.format(route_id)
