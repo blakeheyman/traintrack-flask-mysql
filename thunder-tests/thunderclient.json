@@ -296,12 +296,12 @@
     "method": "PUT",
     "sortNum": 20000,
     "created": "2023-04-17T18:13:37.132Z",
-    "modified": "2023-04-19T05:20:49.339Z",
+    "modified": "2023-04-19T20:34:14.237Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n    \"id\": 1,\n    \"location_name\": \"Pierre Van Ryneveld Airport\",\n    \"open\": 0,\n    \"route_id\": 7,\n    \"sequence_num\": 10,\n    \"time_to_here\": 3\n}",
+      "raw": "{\n    \"id\": 1,\n    \"location_name\": \"Pierre Van Ryneveld Airport\",\n    \"open\": 0,\n    \"route_id\": 7,\n    \"sequence_num\": 1,\n    \"time_to_here\": 3\n}",
       "form": []
     },
     "tests": []
@@ -414,18 +414,26 @@
     "method": "POST",
     "sortNum": 50000,
     "created": "2023-04-17T19:15:53.338Z",
-    "modified": "2023-04-17T19:39:57.859Z"
+    "modified": "2023-04-19T20:38:21.227Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"place_after_stop_id\" : 66, \n    \"location_name\": \"Pierre Van Ryneveld Airport\",\n    \"open\": 1,\n    \"route_id\": 5,\n    \"time_to_here\": 333\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "61f59911-d628-4ad4-bce7-419cc3954bd2",
     "colId": "7e7852eb-d44f-48d0-92c5-433540ca5962",
     "containerId": "",
     "name": "DEL STOP 200",
-    "url": "http://localhost:8001/a/stops/80",
+    "url": "http://localhost:8001/a/stops/81",
     "method": "DELETE",
     "sortNum": 90000,
     "created": "2023-04-17T19:31:17.145Z",
-    "modified": "2023-04-19T06:45:25.116Z",
+    "modified": "2023-04-19T20:39:00.967Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -656,7 +664,15 @@
     "method": "POST",
     "sortNum": 70000,
     "created": "2023-04-17T22:12:52.328Z",
-    "modified": "2023-04-17T23:03:44.965Z"
+    "modified": "2023-04-19T20:37:01.267Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"location_name\": \"Pierre Van Ryneveld Airport\",\n    \"open\": 1,\n    \"route_id\": 5,\n    \"time_to_here\": 333\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "1e8e833f-66c7-4235-a2fb-eec89f37cafd",
@@ -667,7 +683,15 @@
     "method": "POST",
     "sortNum": 80000,
     "created": "2023-04-17T22:19:55.166Z",
-    "modified": "2023-04-17T22:19:55.166Z"
+    "modified": "2023-04-19T20:38:47.947Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"location_name\": \"Pierre Van Ryneveld Airport\",\n    \"open\": 1,\n    \"route_id\": 100,\n    \"time_to_here\": 333\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "1a7fd67d-0eb6-4ca6-96b5-064ccb5fa733",
