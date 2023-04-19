@@ -100,8 +100,8 @@ CREATE TABLE alerts
 (
 	id     	INT PRIMARY KEY AUTO_INCREMENT,
 	message	VARCHAR(50) NOT NULL,
-	start_date DATE,
-	end_date   DATE,
+	start_date DATETIME,
+	end_date   DATETIME,
 	severity   INT,
 	stop_id	INT     	NOT NULL,
 	CONSTRAINT
