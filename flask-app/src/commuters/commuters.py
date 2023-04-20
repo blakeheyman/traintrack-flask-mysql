@@ -38,8 +38,6 @@ def get_favorites(email):
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
 
-    if len(json_data) == 0:
-        return jsonify({'message': 'No favorites found for this user.'}), 404
     return jsonify(json_data)
 
 # Add a favorite to a user's favorites
